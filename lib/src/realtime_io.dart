@@ -15,7 +15,6 @@ import 'client_io.dart';
 RealtimeBase createRealtime(Client client) => RealtimeIO(client);
 
 class RealtimeIO extends RealtimeBase with RealtimeMixin {
-
   RealtimeIO(Client client) {
     this.client = client;
     getWebSocket = _getWebSocket;
@@ -23,7 +22,8 @@ class RealtimeIO extends RealtimeBase with RealtimeMixin {
 
   Future<WebSocketChannel> _getWebSocket(Uri uri) async {
     Map<String, String>? headers;
-    while (!(client as ClientIO).initialized && (client as ClientIO).initProgress) {
+    while (!(client as ClientIO).initialized &&
+        (client as ClientIO).initProgress) {
       await Future.delayed(Duration(milliseconds: 10));
     }
     if (!(client as ClientIO).initialized) {
@@ -43,8 +43,8 @@ class RealtimeIO extends RealtimeBase with RealtimeMixin {
   /// Use this method to subscribe to a channels and listen to
   /// realtime events on those channels
   @override
-  RealtimeSubscription subscribe(List<String> channels) {
-    return subscribeTo(channels);
+  Future<RealtimeSubscription> subscribe(List<String> channels) async {
+    return await subscribeTo(channels);
   }
 
   // https://github.com/jonataslaw/getsocket/blob/f25b3a264d8cc6f82458c949b86d286cd0343792/lib/src/io.dart#L104
